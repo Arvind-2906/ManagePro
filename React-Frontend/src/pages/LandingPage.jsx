@@ -15,9 +15,9 @@ const LandingPage = () => {
                 <div className="px-6 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center shadow-lg shadow-indigo-500/30">
-                            <span className="text-white font-display font-bold text-lg">A</span>
+                            <span className="text-white font-display font-bold text-lg">M</span>
                         </div>
-                        <span className="font-display font-extrabold text-xl tracking-tight text-slate-800">Admin<span className="text-indigo-600">Pro</span></span>
+                        <span className="font-display font-extrabold text-xl tracking-tight text-slate-800">Manage<span className="text-indigo-600">Pro</span></span>
                     </div>
                     <div className="flex items-center gap-2">
                         <Link to="/login" className="px-5 py-2 font-semibold text-sm text-slate-600 hover:text-indigo-600 transition-colors">
@@ -46,7 +46,7 @@ const LandingPage = () => {
                         Workforce <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-indigo-400">mastery</span> at scale.
                     </h1>
                     <p className="text-lg md:text-xl text-slate-500 font-medium mb-10 max-w-2xl mx-auto leading-relaxed">
-                        Say goodbye to scattered spreadsheets. AdminPro unifies payroll, attendance, and department coordination into one seamless grid.
+                        Say goodbye to scattered spreadsheets. ManagePro unifies payroll, attendance, and department coordination into one seamless grid.
                     </p>
                 </div>
 
@@ -144,9 +144,9 @@ const LandingPage = () => {
                 <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row justify-between items-center gap-4">
                     <div className="flex items-center gap-2">
                         <div className="w-6 h-6 rounded bg-indigo-600 flex items-center justify-center">
-                            <span className="text-white font-display font-bold text-[10px]">A</span>
+                            <span className="text-white font-display font-bold text-[10px]">M</span>
                         </div>
-                        <span className="font-bold text-sm text-slate-800">AdminPro Solutions</span>
+                        <span className="font-bold text-sm text-slate-800">ManagePro Solutions</span>
                     </div>
                     <div className="text-center text-sm text-slate-500 font-medium">
                         &copy; {new Date().getFullYear()} All rights reserved.

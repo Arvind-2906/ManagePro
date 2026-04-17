@@ -6,9 +6,9 @@ const Sidebar = () => {
         <div className="bg-secondary text-white w-64 min-h-screen space-y-6 py-7 px-4 absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 ease-in-out shadow-2xl z-20">
             <div className="flex items-center space-x-3 px-4 mb-10">
                 <div className="w-10 h-10 rounded-xl bg-primary shadow-lg flex items-center justify-center">
-                    <span className="text-xl font-bold text-white">A</span>
+                    <span className="text-xl font-bold text-white">M</span>
                 </div>
-                <span className="text-2xl font-extrabold text-white tracking-tight">Admin<span className="text-primary font-bold">Pro</span></span>
+                <span className="text-2xl font-extrabold text-white tracking-tight">Manage<span className="text-primary font-bold">Pro</span></span>
             </div>
             <nav className="space-y-3">
                 <NavLink

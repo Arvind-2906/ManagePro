@@ -25,6 +25,7 @@ import EmployeeSummary from './pages/EmployeeSummary';
 import Profile from './pages/Profile';
 import EmployeeLeaves from './pages/EmployeeLeaves';
 import EmployeeSalary from './pages/EmployeeSalary';
+import EmployeeDepartments from './pages/EmployeeDepartments';
 
 import './App.css';
 
@@ -72,6 +73,7 @@ function App() {
             <Route index element={<EmployeeSummary />} />
             <Route path="profile" element={<Profile />} />
             <Route path="leaves" element={<EmployeeLeaves />} />
+            <Route path="departments" element={<EmployeeDepartments />} />
             <Route path="salary" element={<EmployeeSalary />} />
           </Route>
           

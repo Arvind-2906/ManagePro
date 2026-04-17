@@ -199,7 +199,7 @@ const AdminSummary = () => {
                                 <Megaphone className="w-5 h-5 text-indigo-500" />
                                 <h3 className="text-lg font-bold text-slate-800 tracking-tight">Notice Board</h3>
                             </div>
-                            <Link to="/admin-dashboard/notices" className="text-sm font-semibold text-primary hover:text-indigo-700 transition-colors">
+                            <Link to="/admin-dashboard/announcements" className="text-sm font-semibold text-primary hover:text-indigo-700 transition-colors">
                                 View All
                             </Link>
                         </div>

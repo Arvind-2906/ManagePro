@@ -21,13 +21,13 @@ export const buildSalarySlipBuffer = async (salaryData) => {
             const topMargin = 50;
             
             // Header: Company Details
-            doc.fontSize(24).font('Helvetica-Bold').fillColor('#4F46E5')
-               .text('AdminPro Organization', 50, topMargin, { align: 'center' });
+                doc.fontSize(24).font('Helvetica-Bold').fillColor('#4F46E5')
+                    .text('ManagePro Organization', 50, topMargin, { align: 'center' });
             
             doc.fontSize(10).font('Helvetica').fillColor('#64748B')
                .text('123 Corporate Blvd, Business District, NY 10001', { align: 'center' })
                .moveDown(0.2)
-               .text('Email: hr@adminpro.com | Phone: +1 800-555-0199', { align: 'center' })
+               .text('Email: hr@managepro.com | Phone: +1 800-555-0199', { align: 'center' })
                .moveDown(1);
                
             // HR Line
