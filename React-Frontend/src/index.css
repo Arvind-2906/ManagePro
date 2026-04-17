@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #4F46E5;
+  --color-primary-hover: #4338CA;
+  --color-secondary: #1F2937;
+  --color-accent: #E11D48;
+  --color-background: #F8FAFC;
+  --font-sans: "Inter", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --font-display: "Outfit", system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+:root {
+  font-family: var(--font-sans);
+  background-color: var(--color-background);
+  color: var(--color-secondary);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+/* Minimalist Utilities Add-on */
+@layer utilities {
+  .btn-primary {
+    @apply bg-primary hover:bg-primary-hover text-white transition-colors duration-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+}
