@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const AddEmployee = () => {
     const navigate = useNavigate();
+    const fileInputRef = useRef(null);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -16,6 +17,7 @@ const AddEmployee = () => {
         salary: ''
     });
     const [profileImage, setProfileImage] = useState(null);
+    const [removeProfileImage, setRemoveProfileImage] = useState(false);
     const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -24,7 +26,22 @@ const AddEmployee = () => {
     };
 
     const handleFileChange = (e) => {
-        setProfileImage(e.target.files[0]);
+        setProfileImage(e.target.files?.[0] || null);
+        setRemoveProfileImage(false);
+    };
+
+    const handleRemoveSelectedImage = () => {
+        setProfileImage(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+    };
+
+    const handleToggleRemoveSavedImage = () => {
+        setRemoveProfileImage((prev) => !prev);
+        if (profileImage) {
+            handleRemoveSelectedImage();
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -38,6 +55,9 @@ const AddEmployee = () => {
         });
         if (profileImage) {
             data.append('profileImage', profileImage);
+        }
+        if (removeProfileImage) {
+            data.append('removeProfileImage', 'true');
         }
 
         try {
@@ -61,6 +81,7 @@ const AddEmployee = () => {
                     salary: ''
                 });
                 setProfileImage(null);
+                setRemoveProfileImage(false);
                 setTimeout(() => {
                     navigate('/admin-dashboard/employees');
                 }, 600);
@@ -178,10 +199,30 @@ const AddEmployee = () => {
                                     <p className="mb-2 text-sm text-slate-500"><span className="font-semibold text-indigo-600">Click to upload</span> or drag and drop</p>
                                     <p className="text-xs text-slate-400">PNG, JPG, JPEG (Max 2MB)</p>
                                 </div>
-                                <input type="file" name="profileImage" accept="image/*" onChange={handleFileChange} className="hidden" />
+                                <input ref={fileInputRef} type="file" name="profileImage" accept="image/*" onChange={handleFileChange} className="hidden" />
                             </label>
                         </div>
-                        {profileImage && <p className="mt-2 text-sm text-emerald-600 font-medium flex items-center"><svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg> {profileImage.name} selected</p>}
+                        {profileImage && (
+                            <div className="mt-2 flex items-center justify-between gap-3">
+                                <p className="text-sm text-emerald-600 font-medium flex items-center"><svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg> {profileImage.name} selected</p>
+                                <button
+                                    type="button"
+                                    onClick={handleRemoveSelectedImage}
+                                    className="text-sm font-medium text-red-600 hover:text-red-700"
+                                >
+                                    Remove selected image
+                                </button>
+                            </div>
+                        )}
+                        <label className="mt-3 flex items-center gap-2 text-sm text-slate-600">
+                            <input
+                                type="checkbox"
+                                checked={removeProfileImage}
+                                onChange={handleToggleRemoveSavedImage}
+                                className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                            />
+                            Remove currently saved image while updating existing employee
+                        </label>
                     </div>
                 </div>
 

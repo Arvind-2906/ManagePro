@@ -18,8 +18,10 @@ const registerEmployee = asyncHandler(async (req, res) => {
         gender,
         designation,
         department,
-        salary
+        salary,
+        removeProfileImage
     } = req.body;
+    const shouldRemoveProfileImage = removeProfileImage === true || removeProfileImage === 'true';
 
     if ([name, email].some((field) => !field || field.trim() === "")) {
         throw new ApiError(400, "Name and email are required");
@@ -68,6 +70,8 @@ const registerEmployee = asyncHandler(async (req, res) => {
     existedUser.role = role && ['admin', 'employee'].includes(role) ? role : 'employee';
     if (profileImage?.url) {
         existedUser.profileImage = profileImage.url;
+    } else if (shouldRemoveProfileImage) {
+        existedUser.profileImage = "";
     }
     await existedUser.save({ validateBeforeSave: false });
 
@@ -95,6 +99,8 @@ const registerEmployee = asyncHandler(async (req, res) => {
         if (salary !== undefined && salary !== "") employeeDoc.salary = Number(salary);
         if (profileImage?.url) {
             employeeDoc.profileImage = profileImage.url;
+        } else if (shouldRemoveProfileImage) {
+            employeeDoc.profileImage = "";
         } else if (!employeeDoc.profileImage && existedUser.profileImage) {
             employeeDoc.profileImage = existedUser.profileImage;
         }
@@ -146,7 +152,8 @@ const registerEmployee = asyncHandler(async (req, res) => {
 });
 
 const updateProfile = asyncHandler(async (req, res) => {
-    const { name, age, designation, department } = req.body;
+    const { name, age, designation, department, removeProfileImage } = req.body;
+    const shouldRemoveProfileImage = removeProfileImage === true || removeProfileImage === 'true';
 
     // 1. Find User and Employee linked to the current logged-in user
     const user = await User.findById(req.user._id);
@@ -200,6 +207,13 @@ const updateProfile = asyncHandler(async (req, res) => {
 
         if (employee) {
             employee.profileImage = uploadedImage.url;
+        }
+    } else if (shouldRemoveProfileImage) {
+        user.profileImage = "";
+        await user.save({ validateBeforeSave: false });
+
+        if (employee) {
+            employee.profileImage = "";
         }
     }
 

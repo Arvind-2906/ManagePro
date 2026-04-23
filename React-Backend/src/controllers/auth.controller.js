@@ -4,11 +4,22 @@ import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { Employee } from '../models/employee.model.js';
 
+const PASSWORD_MIN_LENGTH = 9;
+const SPECIAL_CHARACTER_REGEX = /[^A-Za-z0-9]/;
+
 const registerUser = asyncHandler(async (req, res) => {
     const { name, email, password, role } = req.body;
 
     if ([name, email, password].some((field) => field?.trim() === "")) {
         throw new ApiError(400, "All fields are required");
+    }
+
+    if (password.length < PASSWORD_MIN_LENGTH) {
+        throw new ApiError(400, "Password must be greater than 8 characters");
+    }
+
+    if (!SPECIAL_CHARACTER_REGEX.test(password)) {
+        throw new ApiError(400, "Password must contain at least one special character");
     }
 
     const existedUser = await User.findOne({ email });

@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 
+const PASSWORD_MIN_LENGTH = 9;
+const SPECIAL_CHARACTER_REGEX = /[^A-Za-z0-9]/;
+
 const Register = () => {
     const [formData, setFormData] = useState({
         name: '',
@@ -20,6 +23,17 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+
+        if (formData.password.length < PASSWORD_MIN_LENGTH) {
+            setError('Password must be greater than 8 characters.');
+            return;
+        }
+
+        if (!SPECIAL_CHARACTER_REGEX.test(formData.password)) {
+            setError('Password must contain at least one special character.');
+            return;
+        }
+
         setLoading(true);
 
         try {
@@ -86,6 +100,9 @@ const Register = () => {
                             onChange={handleChange}
                             placeholder="••••••••"
                         />
+                        <p className="mt-1 text-xs text-slate-500">
+                            Password must be greater than 8 characters and include at least one special character.
+                        </p>
                     </div>
                     
                     <div>

@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 
 const Profile = () => {
     const { user } = useAuth();
+    const fileInputRef = useRef(null);
+    const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
     const [formData, setFormData] = useState({
         name: '',
         age: '',
@@ -15,6 +17,9 @@ const Profile = () => {
     const [departments, setDepartments] = useState([]);
     const [loading, setLoading] = useState(false);
     const [toast, setToast] = useState({ show: false, message: '', type: '' });
+    const [isDragging, setIsDragging] = useState(false);
+    const [removeProfileImage, setRemoveProfileImage] = useState(false);
+    const [currentProfileImageUrl, setCurrentProfileImageUrl] = useState('');
 
     useEffect(() => {
         // Fetch specific departments on mount
@@ -33,6 +38,7 @@ const Profile = () => {
             .then(res => {
                 const data = res.data.data;
                 const age = data.dob ? new Date().getFullYear() - new Date(data.dob).getFullYear() : '';
+                setCurrentProfileImageUrl(data.profileImage || data.userId?.profileImage || '');
                 setFormData({
                     name: data.userId?.name || '',
                     age: age,
@@ -47,7 +53,21 @@ const Profile = () => {
     const handleChange = (e) => {
         const { name, value, files } = e.target;
         if (name === 'profileImage') {
-            setFormData(prev => ({ ...prev, profileImage: files[0] }));
+            const selectedFile = files?.[0];
+            if (!selectedFile) return;
+
+            if (!selectedFile.type.startsWith('image/')) {
+                showToast('Please select an image file.', 'error');
+                return;
+            }
+
+            if (selectedFile.size > MAX_IMAGE_SIZE_BYTES) {
+                showToast('Image must be 5MB or smaller.', 'error');
+                return;
+            }
+
+            setRemoveProfileImage(false);
+            setFormData(prev => ({ ...prev, profileImage: selectedFile }));
         } else {
             setFormData(prev => ({ ...prev, [name]: value }));
         }
@@ -56,6 +76,65 @@ const Profile = () => {
     const showToast = (message, type) => {
         setToast({ show: true, message, type });
         setTimeout(() => setToast({ show: false, message: '', type: '' }), 4000);
+    };
+
+    const handleDrop = (e) => {
+        e.preventDefault();
+        setIsDragging(false);
+
+        const droppedFile = e.dataTransfer?.files?.[0];
+        if (!droppedFile) return;
+
+        if (!droppedFile.type.startsWith('image/')) {
+            showToast('Please drop an image file.', 'error');
+            return;
+        }
+
+        if (droppedFile.size > MAX_IMAGE_SIZE_BYTES) {
+            showToast('Image must be 5MB or smaller.', 'error');
+            return;
+        }
+
+        setRemoveProfileImage(false);
+        setFormData(prev => ({ ...prev, profileImage: droppedFile }));
+    };
+
+    const handlePaste = (e) => {
+        const items = e.clipboardData?.items || [];
+        for (const item of items) {
+            if (item.type.startsWith('image/')) {
+                const pastedFile = item.getAsFile();
+                if (!pastedFile) return;
+
+                if (pastedFile.size > MAX_IMAGE_SIZE_BYTES) {
+                    showToast('Image must be 5MB or smaller.', 'error');
+                    return;
+                }
+
+                setRemoveProfileImage(false);
+                setFormData(prev => ({ ...prev, profileImage: pastedFile }));
+                showToast('Image pasted successfully.', 'success');
+                return;
+            }
+        }
+    };
+
+    const handleRemoveImage = () => {
+        if (formData.profileImage) {
+            setFormData(prev => ({ ...prev, profileImage: null }));
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+            showToast('Selected image removed.', 'success');
+            return;
+        }
+
+        if (currentProfileImageUrl) {
+            setRemoveProfileImage(true);
+            showToast('Current image will be removed after saving.', 'success');
+        } else {
+            showToast('No image to remove.', 'error');
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -69,6 +148,7 @@ const Profile = () => {
             if (formData.designation) dataToSubmit.append('designation', formData.designation);
             if (formData.department) dataToSubmit.append('department', formData.department);
             if (formData.profileImage) dataToSubmit.append('profileImage', formData.profileImage);
+            if (removeProfileImage) dataToSubmit.append('removeProfileImage', 'true');
 
             // Note: Adjusted path internally to match your backend mount points
             const response = await axios.patch('/api/v1/user/update-profile', dataToSubmit, {
@@ -80,6 +160,10 @@ const Profile = () => {
             });
 
             showToast(response.data.message || "Profile and Cloudinary Image saved successfully!", "success");
+            const updatedProfile = response.data?.data;
+            setCurrentProfileImageUrl(updatedProfile?.profileImage || updatedProfile?.userId?.profileImage || '');
+            setRemoveProfileImage(false);
+            setFormData(prev => ({ ...prev, profileImage: null }));
         } catch (error) {
             showToast(error.response?.data?.message || "Failed to update profile.", "error");
         } finally {
@@ -166,18 +250,42 @@ const Profile = () => {
 
                 <div className="pt-2">
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Profile Picture</label>
-                    <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-indigo-200 border-dashed rounded-xl hover:bg-indigo-50 hover:border-indigo-400 transition-colors group">
+                    <div
+                        className={`mt-1 relative flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-xl transition-colors group ${isDragging ? 'border-indigo-500 bg-indigo-50' : 'border-indigo-200 hover:bg-indigo-50 hover:border-indigo-400'}`}
+                        onDragEnter={(e) => {
+                            e.preventDefault();
+                            setIsDragging(true);
+                        }}
+                        onDragOver={(e) => {
+                            e.preventDefault();
+                            if (!isDragging) setIsDragging(true);
+                        }}
+                        onDragLeave={(e) => {
+                            e.preventDefault();
+                            setIsDragging(false);
+                        }}
+                        onDrop={handleDrop}
+                        onPaste={handlePaste}
+                        tabIndex={0}
+                    >
+                        <input
+                            ref={fileInputRef}
+                            id="file-upload"
+                            name="profileImage"
+                            type="file"
+                            className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
+                            accept="image/*"
+                            onChange={handleChange}
+                            aria-label="Upload profile image"
+                        />
                         <div className="space-y-1 text-center">
                             <svg className="mx-auto h-12 w-12 text-indigo-400 group-hover:text-indigo-500 transition-colors" stroke="currentColor" fill="none" viewBox="0 0 48 48">
                                 <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                             <div className="flex text-sm text-gray-600 justify-center">
-                                <label htmlFor="file-upload" className="relative cursor-pointer rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none">
-                                    <span>Upload a new image</span>
-                                    <input id="file-upload" name="profileImage" type="file" className="sr-only" accept="image/*" onChange={handleChange} />
-                                </label>
+                                <span className="relative rounded-md font-medium text-indigo-600">Upload a new image</span>
                             </div>
-                            <p className="text-xs text-gray-500">PNG, JPG up to 5MB</p>
+                            <p className="text-xs text-gray-500">PNG, JPG up to 5MB. You can also drag and drop or paste (Ctrl+V).</p>
                         </div>
                     </div>
                     {formData.profileImage && (
@@ -185,6 +293,15 @@ const Profile = () => {
                             <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path></svg>
                             Selected: {formData.profileImage.name}
                         </p>
+                    )}
+                    {formData.profileImage && (
+                        <button
+                            type="button"
+                            onClick={handleRemoveImage}
+                            className="mt-2 text-sm font-medium text-red-600 hover:text-red-700"
+                        >
+                            Remove selected image
+                        </button>
                     )}
                 </div>
 
