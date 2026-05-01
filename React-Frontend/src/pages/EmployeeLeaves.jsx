@@ -11,13 +11,20 @@ const EmployeeLeaves = () => {
         reason: ''
     });
 
+    const authHeaders = () => ({
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+    });
+
     useEffect(() => {
         fetchLeaves();
     }, []);
 
     const fetchLeaves = async () => {
         try {
-            const response = await axios.get('/api/v1/leave/employee', { withCredentials: true });
+            const response = await axios.get('/api/v1/leave/employee', {
+                withCredentials: true,
+                headers: authHeaders()
+            });
             setLeaves(response.data.data);
         } catch (error) {
             console.error("Error fetching leaves", error);
@@ -31,12 +38,15 @@ const EmployeeLeaves = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('/api/v1/leave', formData, { withCredentials: true });
+            await axios.post('/api/v1/leave', formData, {
+                withCredentials: true,
+                headers: authHeaders()
+            });
             setShowModal(false);
             fetchLeaves(); // Refresh table
         } catch (error) {
             console.error("Error applying leave", error);
-            alert("Failed to apply leave. Please check all fields.");
+            alert(error.response?.data?.message || "Failed to apply leave.");
         }
     };
 

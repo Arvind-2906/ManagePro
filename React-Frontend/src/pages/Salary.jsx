@@ -15,6 +15,10 @@ const Salary = () => {
         payDate: ''
     });
 
+    const authHeaders = () => ({
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+    });
+
     useEffect(() => {
         fetchSalaries();
         fetchEmployees();
@@ -22,7 +26,10 @@ const Salary = () => {
 
     const fetchSalaries = async () => {
         try {
-            const response = await axios.get('/api/v1/salary', { withCredentials: true });
+            const response = await axios.get('/api/v1/salary', {
+                withCredentials: true,
+                headers: authHeaders()
+            });
             setSalaries(response.data.data || []);
         } catch (error) {
             console.error("Error fetching salaries", error);
@@ -31,7 +38,10 @@ const Salary = () => {
 
     const fetchEmployees = async () => {
         try {
-            const response = await axios.get('/api/v1/employee/all', { withCredentials: true });
+            const response = await axios.get('/api/v1/employee/all', {
+                withCredentials: true,
+                headers: authHeaders()
+            });
             setEmployees(response.data.data || []);
         } catch (error) {
             console.error("Error fetching employees", error);
@@ -45,7 +55,10 @@ const Salary = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('/api/v1/salary', formData, { withCredentials: true });
+            await axios.post('/api/v1/salary', formData, {
+                withCredentials: true,
+                headers: authHeaders()
+            });
             setShowModal(false);
             setFormData({ employeeId: '', basicSalary: '', allowances: '', deductions: '', payDate: '' });
             fetchSalaries();
@@ -60,6 +73,7 @@ const Salary = () => {
         try {
             const response = await axios.get(`/api/v1/salary/generate-slip/${id}`, {
                 withCredentials: true,
+                headers: authHeaders(),
                 responseType: 'blob'
             });
 

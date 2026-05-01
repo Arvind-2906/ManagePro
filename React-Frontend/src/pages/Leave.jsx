@@ -4,13 +4,20 @@ import axios from 'axios';
 const Leave = () => {
     const [leaves, setLeaves] = useState([]);
 
+    const authHeaders = () => ({
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+    });
+
     useEffect(() => {
         fetchLeaves();
     }, []);
 
     const fetchLeaves = async () => {
         try {
-            const response = await axios.get('/api/v1/leave', { withCredentials: true });
+            const response = await axios.get('/api/v1/leave', {
+                withCredentials: true,
+                headers: authHeaders()
+            });
             setLeaves(response.data.data);
         } catch (error) {
             console.error("Error fetching leaves", error);
@@ -19,7 +26,10 @@ const Leave = () => {
 
     const handleAction = async (leaveId, status) => {
         try {
-            await axios.patch(`/api/v1/leave/${leaveId}`, { status }, { withCredentials: true });
+            await axios.patch(`/api/v1/leave/${leaveId}`, { status }, {
+                withCredentials: true,
+                headers: authHeaders()
+            });
             fetchLeaves();
         } catch (error) {
             console.error(`Error updating leave to ${status}`, error);
