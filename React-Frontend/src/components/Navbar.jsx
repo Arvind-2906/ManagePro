@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
-import { Bell } from 'lucide-react';
+import { Bell, Menu, X } from 'lucide-react';
 
-const Navbar = () => {
+const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
     const { user, logout } = useAuth();
     const [notices, setNotices] = useState([]);
     const [showNotices, setShowNotices] = useState(false);
@@ -35,9 +35,18 @@ const Navbar = () => {
     }, []);
 
     return (
-        <header className="bg-white sticky top-0 z-10 border-b border-gray-200 shadow-sm py-3 px-4 sm:px-6 md:px-8 flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center text-secondary transition-all">
-            <h1 className="text-base sm:text-lg font-semibold tracking-tight break-words">Welcome back, {user?.name}</h1>
-            <div className="flex flex-wrap items-center justify-between sm:justify-end gap-2 sm:gap-4">
+        <header className="bg-white sticky top-0 z-10 border-b border-gray-200 shadow-sm py-3 px-4 sm:px-6 md:px-8 flex items-center justify-between gap-3 text-secondary transition-all">
+            <div className="flex items-center gap-4 flex-1 min-w-0">
+                <button
+                    onClick={() => setSidebarOpen(!sidebarOpen)}
+                    className="md:hidden p-2 text-gray-500 hover:text-primary transition-colors focus:outline-none"
+                    aria-label="Toggle sidebar"
+                >
+                    {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                </button>
+                <h1 className="text-base sm:text-lg font-semibold tracking-tight break-words">Welcome back, {user?.name}</h1>
+            </div>
+            <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-4">
                 <div className="hidden md:flex items-center space-x-2 mr-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-accent shadow-[0_0_8px_rgba(16,185,129,0.5)] animate-pulse"></span>
                     <span className="text-sm font-medium text-gray-500 tracking-wide">Online</span>
@@ -57,7 +66,7 @@ const Navbar = () => {
                         </button>
                         
                         {showNotices && (
-                            <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden transform opacity-100 scale-100 transition-all">
+                            <div className="absolute right-0 mt-2 w-full max-w-sm sm:w-80 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden transform opacity-100 scale-100 transition-all mx-2 sm:mx-0\">
                                 <div className="p-4 bg-gray-50 border-b border-gray-100 flex justify-between items-center">
                                     <h3 className="font-bold text-secondary tracking-tight">Recent Notices</h3>
                                     <span className="text-xs font-semibold bg-blue-50 text-primary px-2 py-1 rounded-full border border-blue-100">{notices.length} New</span>

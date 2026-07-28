@@ -1,9 +1,18 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-const Sidebar = () => {
+const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
     return (
-        <div className="bg-secondary text-white w-full md:w-64 min-h-auto md:min-h-screen space-y-6 py-5 px-4 shadow-2xl z-20">
+        <>
+            {sidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-black/50 md:hidden z-10"
+                    onClick={() => setSidebarOpen(false)}
+                />
+            )}
+            <div className={`bg-secondary text-white w-full max-w-64 min-h-screen space-y-6 py-5 px-4 shadow-2xl z-20 fixed md:relative md:z-20 md:max-w-64 transition-transform duration-300 ease-in-out ${
+                sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+            }`}>
             <div className="flex items-center space-x-3 px-4 mb-10">
                 <div className="w-10 h-10 rounded-xl bg-primary shadow-lg flex items-center justify-center">
                     <span className="text-xl font-bold text-white">M</span>
@@ -76,7 +85,8 @@ const Sidebar = () => {
                     <span>Reviews</span>
                 </NavLink>
             </nav>
-        </div>
+            </div>
+        </>
     );
 };
 

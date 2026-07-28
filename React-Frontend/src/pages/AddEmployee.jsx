@@ -103,7 +103,7 @@ const AddEmployee = () => {
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-10">
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-x-12 lg:gap-y-10">
                 {/* Personal Information */}
                 <div className="space-y-6 bg-slate-50/50 p-6 rounded-2xl border border-slate-50">
                     <div className="flex items-center space-x-3 mb-2">
@@ -129,7 +129,7 @@ const AddEmployee = () => {
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-5">
+                    <div className="grid grid-cols-2 gap-3 sm:gap-5">
                         <div>
                             <label className="block text-sm font-semibold text-slate-700 mb-1.5">Date of Birth</label>
                             <input type="date" name="dob" onChange={handleChange} className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow bg-white text-slate-800" />
@@ -155,7 +155,7 @@ const AddEmployee = () => {
                         <h3 className="text-xl font-bold text-slate-800">Professional Details</h3>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-5">
+                    <div className="grid grid-cols-2 gap-3 sm:gap-5">
                         <div>
                             <label className="block text-sm font-semibold text-slate-700 mb-1.5">Employee ID</label>
                             <input type="text" name="employeeId" onChange={handleChange} className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow bg-white text-slate-800" placeholder="EMP-001" />
@@ -174,7 +174,7 @@ const AddEmployee = () => {
                         <input type="text" name="designation" onChange={handleChange} className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow bg-white text-slate-800" placeholder="e.g. Senior Developer" />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-5">
+                    <div className="grid grid-cols-2 gap-3 sm:gap-5">
                         <div>
                             <label className="block text-sm font-semibold text-slate-700 mb-1.5">Department</label>
                             <select name="department" onChange={handleChange} className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow bg-white text-slate-800 cursor-pointer">

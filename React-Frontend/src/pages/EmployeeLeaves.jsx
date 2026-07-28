@@ -63,7 +63,8 @@ const EmployeeLeaves = () => {
                 </button>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+            {/* Desktop Table */}
+            <div className="hidden md:block bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
@@ -101,16 +102,51 @@ const EmployeeLeaves = () => {
                 </div>
             </div>
 
+            {/* Mobile Cards */}
+            {leaves.length > 0 ? (
+                <div className="md:hidden space-y-3">
+                    {leaves.map((leave) => (
+                        <div key={leave._id} className="bg-white rounded-lg shadow-sm border border-slate-100 p-4 space-y-2">
+                            <div className="flex justify-between items-start gap-2">
+                                <div>
+                                    <p className="text-xs text-slate-500 uppercase font-semibold">Type</p>
+                                    <p className="text-sm font-bold text-slate-800">{leave.leaveType}</p>
+                                </div>
+                                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-bold border ${leave.status === 'Approved' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : leave.status === 'Rejected' ? 'bg-red-50 text-red-700 border-red-200' : 'bg-amber-50 text-amber-700 border-amber-200'}`}>
+                                    {leave.status}
+                                </span>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2">
+                                <div>
+                                    <p className="text-xs text-slate-500 uppercase font-semibold">Start</p>
+                                    <p className="text-sm text-slate-600">{new Date(leave.startDate).toLocaleDateString(undefined, {month: 'short', day: 'numeric'})}</p>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-slate-500 uppercase font-semibold">End</p>
+                                    <p className="text-sm text-slate-600">{new Date(leave.endDate).toLocaleDateString(undefined, {month: 'short', day: 'numeric'})}</p>
+                                </div>
+                            </div>
+                            <div>
+                                <p className="text-xs text-slate-500 uppercase font-semibold">Reason</p>
+                                <p className="text-sm text-slate-600 line-clamp-2">{leave.reason}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <div className="md:hidden text-center py-8 text-slate-400 font-medium bg-white rounded-lg border border-slate-100">No leave requests found.</div>
+            )}
+
             {showModal && (
                 <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
-                    <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md transform transition-all">
+                    <div className="bg-white p-5 sm:p-8 rounded-2xl shadow-2xl w-full max-w-sm sm:max-w-md transform transition-all">
                         <div className="flex justify-between items-center mb-6">
-                            <h3 className="text-2xl font-bold text-slate-800">Apply for Leave</h3>
-                            <button onClick={() => setShowModal(false)} className="text-slate-400 hover:text-slate-600 transition-colors">
+                            <h3 className="text-xl sm:text-2xl font-bold text-slate-800">Apply for Leave</h3>
+                            <button onClick={() => setShowModal(false)} className="text-slate-400 hover:text-slate-600 transition-colors p-1.5">
                                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                             </button>
                         </div>
-                        <form onSubmit={handleSubmit} className="space-y-5">
+                        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
                             <div>
                                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">Leave Type</label>
                                 <select 
