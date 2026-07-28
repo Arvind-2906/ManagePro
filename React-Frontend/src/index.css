@@ -16,10 +16,25 @@
   color: var(--color-secondary);
 }
 
+html {
+  height: 100%;
+}
+
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 /* Minimalist Utilities Add-on */

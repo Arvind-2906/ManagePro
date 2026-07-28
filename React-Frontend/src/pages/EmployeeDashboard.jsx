@@ -5,11 +5,11 @@ import Navbar from '../components/Navbar';
 
 const EmployeeDashboard = () => {
     return (
-        <div className="flex h-screen bg-slate-50 font-sans selection:bg-indigo-200">
+        <div className="flex min-h-screen flex-col md:flex-row bg-slate-50 font-sans selection:bg-indigo-200">
             <EmployeeSidebar />
-            <div className="flex-1 flex flex-col overflow-hidden relative">
+            <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
                 <Navbar />
-                <main className="flex-1 overflow-x-hidden overflow-y-auto bg-transparent p-8">
+                <main className="flex-1 overflow-x-auto overflow-y-auto bg-transparent p-4 sm:p-6 lg:p-8">
                     <Outlet />
                 </main>
             </div>

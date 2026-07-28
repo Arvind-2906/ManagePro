@@ -35,17 +35,17 @@ const Navbar = () => {
     }, []);
 
     return (
-        <header className="bg-white sticky top-0 z-10 border-b border-gray-200 shadow-sm py-4 px-8 flex justify-between items-center text-secondary transition-all">
-            <h1 className="text-lg font-semibold tracking-tight">Welcome back, {user?.name}</h1>
-            <div className="flex items-center space-x-4">
-                <div className="hidden md:flex items-center space-x-2 mr-4">
+        <header className="bg-white sticky top-0 z-10 border-b border-gray-200 shadow-sm py-3 px-4 sm:px-6 md:px-8 flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center text-secondary transition-all">
+            <h1 className="text-base sm:text-lg font-semibold tracking-tight break-words">Welcome back, {user?.name}</h1>
+            <div className="flex flex-wrap items-center justify-between sm:justify-end gap-2 sm:gap-4">
+                <div className="hidden md:flex items-center space-x-2 mr-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-accent shadow-[0_0_8px_rgba(16,185,129,0.5)] animate-pulse"></span>
                     <span className="text-sm font-medium text-gray-500 tracking-wide">Online</span>
                 </div>
                 
                 {/* Notifications Bell */}
                 {user?.role === 'employee' && (
-                    <div className="relative mr-4" ref={dropdownRef}>
+                    <div className="relative mr-2" ref={dropdownRef}>
                         <button 
                             onClick={() => setShowNotices(!showNotices)} 
                             className="p-2 text-gray-500 hover:text-primary transition-colors focus:outline-none relative"
@@ -83,7 +83,7 @@ const Navbar = () => {
                 )}
                 <button
                     onClick={logout}
-                    className="px-4 py-2 text-sm font-semibold bg-white text-secondary border border-gray-200 rounded-lg hover:bg-gray-50 hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all duration-200 shadow-sm"
+                    className="px-3 py-2 text-sm font-semibold bg-white text-secondary border border-gray-200 rounded-lg hover:bg-gray-50 hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all duration-200 shadow-sm"
                 >
                     Logout
                 </button>

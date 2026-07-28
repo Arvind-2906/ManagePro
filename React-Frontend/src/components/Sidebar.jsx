@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 const Sidebar = () => {
     return (
-        <div className="bg-secondary text-white w-64 min-h-screen space-y-6 py-7 px-4 absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 ease-in-out shadow-2xl z-20">
+        <div className="bg-secondary text-white w-full md:w-64 min-h-auto md:min-h-screen space-y-6 py-5 px-4 shadow-2xl z-20">
             <div className="flex items-center space-x-3 px-4 mb-10">
                 <div className="w-10 h-10 rounded-xl bg-primary shadow-lg flex items-center justify-center">
                     <span className="text-xl font-bold text-white">M</span>
